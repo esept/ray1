@@ -1,0 +1,83 @@
+# TP11 : Anti-crénelage
+
+Les damiers de la semaine dernière ont fait apparaître des effets d'escalier
+sur le rendu des images.
+
+![anticrenelage avec effet escalier](damier.png)
+
+Cet effet est lié à la technique de calcul de la couleur de chaque point : jusqu'à présent, nous utilisons la couleur du centre du pixel pour décider de la couleur du pixel entier.
+
+Une autre approche, qui permet de limiter l'effet d'escalier, est d'échantillonner les couleurs en différents points du pixel, et de donner au pixel la moyenne des couleurs obtenues.
+
+Il existe plusieurs approches pour effectuer ces échantillonnages :
+
+1. choisir aléatoirement des points à l'intérieur du pixel. Dans ce cas, on remplace le calcul du vecteur $`\vec{d}`$ en $`(i+0.5,j+0.5)`$ comme dans le TP4 par celui d'un ensemble de vecteurs en $`(i+dx,j+dy)`$ avec $`dx`$ et $`dy`$ deux nombres aléatoires entre 0 et 1 ($`dx,dy \in [0,1[`$). Générer 10 vecteurs de cette manière est suffisant pour obtenir une amélioration visible de l'image. 
+
+2. choisir de découper le pixel en une grille, et choisir les vecteurs correspondant au milieu de chaque case de la grille. La principale différence par rapport à la technique précédente est que l'échantillonnage est uniforme. On pourra utiliser une grille de 3x3, 4x4 ou 6x6 par exemple.
+
+La figure suivante illustre l'approche que nous utilisons actuellement sur la gauche, l'échantillonnage aléatoire au milieu et l'échantillonnage par grille à droite. 
+ 
+![échantillonnage](sampling.png)
+
+Voici le résultat de l'image anticrenelage en utilisant ces deux techniques.
+
+![anticrenelage avec sondage aléatoire (10 vecteurs) ](damier-RANDOM.png)
+
+![anticrenelage avec sondage grille (6x6 vecteurs)](damier-GRID.png)
+
+Pour ce TP, vous devez modifier votre lanceur de rayons pour prendre en compte l'utilisation de l'échantillonnage.
+
+Le pseudo code à utiliser est le suivant :
+
+```
+Couleur couleur = NOIR
+D = liste des échantillons du pixel (i,j)
+pour chaque vecteur échantillon d de D faire
+     couleur += calculeCouleur(d)
+couleur = couleur/|D|
+```
+
+On note que si $`D`$ contient un seul vecteur $`\vec{d}`$ comme dans le TP4, on retrouve le comportement habituel du lanceur de rayons.
+
+* La solution la plus simple est de mettre en place un tirage aléatoire de 10 points dans le pixel : on utilisera la méthode d'instance `java.util.Random.nextDouble()` pour générer un nombre aléatoire entre 0 et 1.
+
+* La solution la plus générique est de permettre à l'utilisateur de choisir entre la solution actuelle (un seul point par pixel) et les deux stratégies de sondage décrites ci-dessus.
+
+* Une solution parfaite devrait permettre à l'utilisateur d'indiquer le nombre d'échantillons quand l'échantillonnage est utilisé (pour tester plusieurs tailles d'échantillons pour une même image par exemple).
+
+## Ajout des informations d'échantillonnage dans le fichier de description de scènes
+
+Une majorité des étudiants présents lors de la première séance de TP a décidé d'intégrer les informations d'échantillonnage dans le fichier de description de scène pour faciliter la comparaison des images.
+
+Le format de l'information d'échantillonnage est le suivant :
+
+```
+sampling <technique> <number>
+```
+
+Les valeurs acceptées pour `<technique>` sont `middle`, `random` et `grid`.
+
+La sémantique du nombre dépend de la valeur de `<technique>`.
+
+* `middle` la valeur de `number` doit être 1
+* `random` la valeur de `number` est le nombre d'échantillons
+* `grid` la valeur de `number` est la taille d'un coté de la grille (pour un total de `number`*`number` échantillons).
+
+Voici trois exemples valides correspondant aux informations d'échantillonnage.
+
+```
+sampling middle 1
+sampling random 10
+sampling grid 6
+```
+
+## Vérification de la génération des scènes
+
+Comme précédemment, ce sont les scripts `raytrace.sh` et `compare.sh` qui sont utilisés pour vérifier que les images générées sont identiques aux images attendues.
+
+Décommenter les tests liés dans le fichier `tests.sh` et le fichier `.gitlab-ci.yml`.
+
+Une fois le travail réalisé, faire un ```commit``` puis un ```push``` de ce travail sur gitlab.
+
+Vous pouvez vérifier sur [sonarqube](https://sonarqube.univ-artois.fr) si l'analyse automatique de votre code a relevé des violations des règles associées à votre langage. Si les remarques sont pertinentes, il faut corriger de manière appropriée votre code.
+

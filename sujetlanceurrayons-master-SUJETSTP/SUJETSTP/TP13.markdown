@@ -1,0 +1,57 @@
+# TP 13 : application de textures
+
+## Fichiers de texture
+
+Une fois que l'on a compris comment appliquer une texture procédurale, il n'est pas difficile
+d'appliquer le même principe pour appliquer une texture qui se trouve dans un fichier sur un objet de la scène.
+
+Voici quelques exemples de scènes générées de cette façon :
+
+![la terre](../TP13/billard.png)
+![la terre](../TP13/billard2.png)
+![la terre](../TP13/earth.png)
+![la terre](../TP13/spheres-billard.png)
+![la terre](../TP13/spheres-texture.png)
+
+Il nous suffit dans notre description de scène de rajouter le mot clé `texture` pour indiquer un fichier de texture.
+
+```
+size 1280 1024
+output earth.png
+camera 4 0 0 0 0 0 0 1 0 45
+
+directional 1 1 1 1 1 1
+specular .2 .2 .2
+shininess 100
+
+maxdepth 5
+shadow true
+
+diffuse .5 .5 .5
+plane -2 0 0 1 0 0
+
+texture textures/earth.jpg
+sphere 0 0 0 1 
+```
+
+## Vérification de la génération des scènes
+
+Comme précédemment, ce sont les scripts `raytrace.sh` et `compare.sh` qui sont utilisés pour vérifier que les images générées sont identiques aux images attendues.
+
+Les nouveaux tests se trouvent sur la branche `textures`. Pour récupérer ces tests, il suffit de fusionner la branche `textures`et la branche `master`.
+
+Vous pouvez ensuite tester votre travail localement (sur une machine unix) en lançant le script `tests.sh`.
+
+Une fois le travail réalisé, faire un ```commit``` puis un ```push``` de ce travail sur gitlab.
+
+C'est ce que font les commandes suivantes :
+
+```bash
+$ git merge origin/textures
+$ git add src
+$ git commit -m "ajout textures"
+$ git push
+```
+
+Vous pouvez vérifier sur [sonarqube](https://sonarqube.univ-artois.fr) si l'analyse automatique de votre code a relevé des violations des règles associées à votre langage. Si les remarques sont pertinentes, il faut corriger de manière appropriée votre code.
+

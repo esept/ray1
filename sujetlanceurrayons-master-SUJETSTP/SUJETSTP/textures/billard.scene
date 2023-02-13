@@ -1,0 +1,18 @@
+size 1024 768
+output billard.png
+camera 8 .5 0 0 0 0 0 1 0 45
+
+directional 1 1 1 1 1 1
+specular .2 .2 .2
+shininess 100
+ 
+#texture textures/Earth.jpg
+texture textures/billard15.jpg
+sphere 0 0 0 1 
+texture textures/billard14.jpg
+sphere 0 0 2 1
+texture textures/billard13.jpg
+sphere 0 0 -2 1
+
+texture textures/bois.jpg
+plane 0 -1 0 0 1 0

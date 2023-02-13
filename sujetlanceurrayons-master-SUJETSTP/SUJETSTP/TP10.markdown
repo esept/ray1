@@ -1,0 +1,78 @@
+# TP 10 : textures procédurales
+
+## Textures procédurales (damier)
+
+Dans la plupart des images de lanceurs de rayon, les objets sont posés sur un plan en damier, comme dans l'exemple ci-dessous :
+
+![Un damier sur un plan](damier.png)
+
+Ce qui change par rapport aux plans classiques est qu'au lieu de retourner toujours la même couleur, celle ci dépend de la position de l'intersection.
+Supposons que l'on cherche la couleur d'un point en $`(x,y,z)`$ pour un damier noir et blanc avec des carrés de coté 0.5.
+On suppose que l'on s'intéresse à un plan en $`(x,z)`$, un plancher, avec une normale en $`y`$.
+
+Pour calculer la couleur de ce point, il suffit de raisonner sur les valeurs de $`x`$ et $`z`$ :
+
+![grille](grille.png)
+
+* Si $`x`$ et $`z`$ ont des parties décimales toutes les deux inférieures à 0.5 (point A) ou toutes les deux supérieures à 0.5, alors la couleur est NOIR
+* sinon la couleur est BLANC (point B)
+
+Cet exemple se généralise facilement à une taille arbitraire, pour deux couleurs données.
+
+Intégrer la prise en compte d'un damier sur un plan peut être réalisé de diverses manières, mais qui demandent toutes des changements substantiels dans votre code. Cependant, une fois ces changements faits, vous pourrez assez facilement
+intégrer l'utilisation de fichiers de texture.
+
+**En utilisant un environnement de développement intégré comme Eclipse, qui intègre des fonctions de reconception (_refactoring_), vous réduisez le temps nécessaire pour faire ces changements par rapport à un simple éditeur de texte.**
+
+Concernant l'expression du damier dans le fichier de description de scène, on pourra utiliser la syntaxe suivante :
+
+```
+checker couleur1 couleur2 taille
+```
+
+L'image ci-dessus est alors définie par :
+
+```
+size 640 480
+
+output damier.png
+
+camera -5 0 5 0 0 0 0 1 0 45
+
+directional -1 1 1 1 1 1
+
+specular .5 .5 .5
+shininess 30
+maxdepth 5
+
+checker 1 1 1 0 0 0 1 
+plane 0 -3 0 0 1 0
+
+diffuse .5 .5 0
+sphere 0 0 0 1
+
+diffuse 0 .5 .5
+sphere 2 0 1 1
+
+diffuse .5 .5 .5
+sphere 1 -2 1 1
+```
+
+## Bonus, pour les plus rapides
+
+S'il est assez simple de réaliser un damier sur une surface place, il est un peu plus difficile de le faire sur une sphère.
+
+![Plus difficile : un damier sur une sphère](damier2.png)
+
+Essayer diverses méthodes pour avoir un rendu réaliste d'un damier sur une sphère.
+
+## Vérification de la génération des scènes
+
+Comme précédemment, ce sont les scripts `raytrace.sh` et `compare.sh` qui sont utilisés pour vérifier que les images générées sont identiques aux images attendues.
+
+Décommenter les tests liés dans le fichier `tests.sh` et le fichier `.gitlab-ci.yml`.
+
+Une fois le travail réalisé, faire un ```commit``` puis un ```push``` de ce travail sur gitlab.
+
+Vous pouvez vérifier sur [sonarqube](https://sonarqube.univ-artois.fr) si l'analyse automatique de votre code a relevé des violations des règles associées à votre langage. Si les remarques sont pertinentes, il faut corriger de manière appropriée votre code.
+

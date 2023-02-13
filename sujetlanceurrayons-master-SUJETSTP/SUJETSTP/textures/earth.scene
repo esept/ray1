@@ -1,0 +1,11 @@
+size 1280 1024
+output checker.png
+camera 4 0 0 0 0 0 0 1 0 45
+
+directional 1 1 1 1 1 1
+specular .2 .2 .2
+shininess 100
+ 
+#texture textures/Earth.jpg
+texture textures/billard15.jpg
+sphere 0 0 0 1 

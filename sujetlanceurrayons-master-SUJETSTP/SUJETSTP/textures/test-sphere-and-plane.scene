@@ -1,0 +1,17 @@
+# example page 77 (listing 3.18)
+
+size 200 200
+
+camera 0 20 100 0 0 0 0 0 0 45
+
+output listing318.png
+
+
+diffuse 1 0 0
+sphere 0 -25 0 80
+
+diffuse 1 1 0
+sphere 0 30 0 60
+
+diffuse 0.0 0.3 0.0
+plane 0 0 0 0 1 1

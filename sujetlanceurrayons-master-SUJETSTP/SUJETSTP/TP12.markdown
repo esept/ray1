@@ -1,0 +1,75 @@
+# Etape 12 : parallélisation
+
+
+## Version simple
+
+La façon la plus simple de paralléliser le calcul de l'image est de la découper en autant d'unités de calcul que disponible sur la machine qui exécute le programme.
+
+Les machines dont vous disposez en salle TP disposent de 4 coeurs. Vous pouvez donc découper l'image à générer en 4 et lancer en parallèle le calcul de chaque portion d'image,comme représenté dans le diagramme ci dessous :
+
+![parallel](parallel.png)
+
+En supposant que vous disposiez d'une méthode `raytrace(image,x,y,width,heigh)` prenant en paramètre l'objet `image` résultat, l'origine de l'image à dessiner et la taille de l'image en largeur et hauteur, le code suivant (en Java et C++11) permet de lancer quatre threads en parallèle et d'attendre qu'ils se terminent pour continuer l'exécution du programme.
+
+En Java :
+
+```java
+Thread first = new Thread(() -> rayTrace(image,0,0,w/2, h/2));
+Thread second = new Thread(() -> rayTrace(image,0,h/2,w/2, h));
+Thread third = new Thread(() -> rayTrace(image,w/2,0,w, h/2));
+Thread fourth = new Thread(() -> rayTrace(image,w/2,h/2,w, h));
+first.start();
+second.start();
+third.start();
+fourth.start();
+first.join();
+second.join();
+third.join();
+fourth.join();
+```
+
+En C++ 11 :
+
+```cpp
+std::thread first (rayTrace,image,0,0,w/2, h/2);
+std::thread second (rayTrace,image,0,h/2,w/2, h);
+std::thread third (rayTrace,image,w/2,0,w, h/2);
+std::thread fourth (rayTrace,image,w/2,h/2,w, h);
+first.join();
+second.join();
+third.join();
+fourth.join();
+```
+
+## Version plus efficace
+
+Le gros défaut de l'approche précédente est que généralement, les différentes parties de l'image ne prennent pas le même temps à calculer : si il n'y a aucun objet dans une partie de la scène, cette portion d'image sera facile à calculer. Au contraire, une partie d'image contenant des surfaces réfléchissantes prendra plus de temps à générer à cause des appels récursifs au calcul des couleurs. Comme il y a autant de threads que de morceaux d'image, une partie des unités de calcul cessera de travailler quand son travail sera terminé.
+
+Une solution à ce problème est donc de créer plus de morceaux d'images que d'unités de calculs, et de demander à chaque thread de puiser dans une file de travaux le travail à effectuer. Une manière simple de découper le rendu de l'image est de la découper par ligne (soit en 480 morceaux pour nos images qui sont généralement en 640x480).
+
+En Java, il existe des classes qui permettent de le faire facilement. La classe [Executors](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executors.html) permet de définir un pool de threads à utiliser pour exécuter des tâches et la classe [ExecutorService](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html) permet de définir les tâches à lancer, et attendre leur complétion pour continuer l'exécution.
+
+```java
+// crée un ensemble de 4 threads pour exécuter les tâches
+ExecutorService pool = Executors.newFixedThreadPool(4);
+// crée une tâche par ligne de l'image
+for (int i=0;i<h;i++) {
+     pool.execute(() -> rayTrace(image,0,i,w,1));
+}
+// indique de s'arrêter quand les tâches sont terminées
+pool.shutdown();
+// attend la complétion des tâches
+if (!pool.awaitTermination(1200, TimeUnit.SECONDS)) {
+      System.err.println("Timeout reached!!!");
+}
+```
+
+En C++ 11, la gestion d'un pool de thread pour exécuter des tâches doit être faite manuellement.
+
+Il n'y a pas de tests particuliers pour ce travail : seul le temps d'exécution doit s'améliorer.
+Il faut simplement vérifier que les images qui étaient générées auparavant sont toujours correctement générées.
+On parle de "non régression".
+
+Une fois le travail réalisé, faire un ```commit``` puis un ```push``` de ce travail sur gitlab.
+
+Vous pouvez vérifier sur [sonarqube](https://sonarqube.univ-artois.fr) si l'analyse automatique de votre code a relevé des violations des règles associées à votre langage. Si les remarques sont pertinentes, il faut corriger de manière appropriée votre code.
