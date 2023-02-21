@@ -15,15 +15,19 @@ class Triplet:
         self.__y = y
         self.__z = z
         
-    def check_type(self,param_type,this_type,func_name):
-        if self.__type == this_type or param_type == this_type:
-            print("Non "+func_name+" en "+ this_type)
-            return
+    def check_type(self, this_type, param_type=None):
+        if (param_type == None and self.__type == this_type) :
+            return False
+        elif self.__type == this_type or param_type == this_type:
+            return False
+        else:
+            return True
     
     def check_same_type(self,param_type):
         if self.__type != param_type :
-            print("Error: note same type"+self.get_t()+" "+param_type)
-            return
+            return False
+        else:
+            return True
         
     def get_x(self):
         return self.__x
@@ -38,8 +42,10 @@ class Triplet:
         return self.__type
 
     def add(self, Triplet):
-        # self.check_type(Triplet.get_t, 'P', sys._getframe().f_code.co_name)
-        self.check_same_type(Triplet.get_t())
+        '''
+        :param Triplet:
+        :return: new Triplet after addition
+        '''
         if( self.__type == 'P' and Triplet.get_t() == 'P'):
             new_t = 'V'
         else:
@@ -48,9 +54,9 @@ class Triplet:
         n_y = self.__y + Triplet.get_y()
         n_z = self.__z + Triplet.get_z()
         return self.__class__(n_x,n_y,n_z,new_t)
-        
-    
+
     def mul(self, a):
+        # Multiplication par un scalaire
         return self.__class__(self.__x*a,
                               self.__y*a,
                               self.__z*a,
@@ -58,6 +64,10 @@ class Triplet:
         )
 
     def dot(self,Triplet):
+        # Produit scalaire
+        if (not self.check_type('P', Triplet.get_t()) or  not self.check_type('C', Triplet.get_t())):
+            print("Interdit")
+            return
         sum = 0
         sum += self.__x * Triplet.get_x()
         sum += self.__y * Triplet.get_y()
@@ -65,9 +75,17 @@ class Triplet:
         return sum
 
     def sub(self,Triplet):
+        # Soustraction
+        if( not self.check_type('C', Triplet.get_t)):
+            print("Interdit")
+            return
         return self.add(Triplet.mul(-1))
 
-    def cross(self,Triplet):# produit vectoriel
+    def cross(self,Triplet):
+        # produit vectoriel
+        if (not self.check_type('P', Triplet.get_t()) or not self.check_type('C', Triplet.get_t())):
+            print("Interdit")
+            return
         return self.__class__(
             self.__y * Triplet.get_z() - self.__z * Triplet.get_y(),
             self.__z * Triplet.get_x() - self.__x * Triplet.get_z(),
@@ -76,30 +94,37 @@ class Triplet:
         )
 
     def times(self,Triplet):
+        # Produit de Schur
+        if (not self.check_type('V', Triplet.get_t()) or not self.check_type('P', Triplet.get_t())):
+            print("Interdit")
+            return
         return self.__class__(
             self.__x * Triplet.get_x(),
             self.__y * Triplet.get_y(),
             self.__z * Triplet.get_z(),
+            self.__type
         )
     
     def hat(self):
-        
+        # Normalisation
         l = self.len()
-        self.mul(1/l)
+        if l == 0:
+            return None
+        return self.mul(1/l)
     
     def len(self):
-        self.check_type(Triplet.get_t, 'P', sys._getframe().f_code.co_name)
-        self.check_type(Triplet.get_t, 'C', sys._getframe().f_code.co_name)
-
-        sum = 0
-        sum += math.pow(self.__x, 2)
-        sum += math.pow(self.__y, 2)
-        sum += math.pow(self.__z, 2)
-        return math.sqrt(sum)
+        if (not self.check_type('P', Triplet.get_t) or not self.check_type('C', Triplet.get_t)):
+            print("Interdit")
+            return 0
+        else:
+            sum = 0
+            sum += math.pow(self.__x, 2)
+            sum += math.pow(self.__y, 2)
+            sum += math.pow(self.__z, 2)
+            return math.sqrt(sum)
     
     def get_this(self):
         return [self.__x,self.__y,self.__z]
     
     def show(self):
-        print(f"[{self.__x},{self.__y},{self.__z},{self.__type}]")
-
+        print(f"{self.__type} {float(self.__x)} {float(self.__y)} {float(self.__z)}")
