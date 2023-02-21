@@ -1,6 +1,6 @@
-# from math1 import Triplet
-# from math1 import Vector
-from mymath import *
+from mymath import Triplet
+import sys
+from operator import methodcaller
 
 def create_(tab):
     if tab[0] == 'V':
@@ -8,7 +8,6 @@ def create_(tab):
     else:
         var = 3
     return var
-
 
 def test_add():
     p1 = Triplet(1,1,1,'P')
@@ -112,17 +111,35 @@ def test_hat():
     v3.show()
     # print(p3,v3,c3)
 
-
 def test_all():
-    # test_add()
+    test_add()
     test_sub()
-    # test_mul()
-    # test_dot()
-    # test_cross()
-    # test_times()
-    # test_len()
-    # test_hat()
+    test_mul()
+    test_dot()
+    test_cross()
+    test_times()
+    test_len()
+    test_hat()
+    
+def create_obj(arg):
+    if (len(arg) == 1):
+        return int(arg)
+    else:
+        return Triplet(float(arg[2]),float(arg[4]),float(arg[6]),arg[0])
     
 if __name__ == '__main__':
-    test_all()
-    
+    arg1 = sys.argv[1]
+    arg2 = sys.argv[2]
+    arg3 = sys.argv[3]
+    obj1 = create_obj(arg1)
+    obj2 = create_obj(arg3)
+    if (arg2 == 'mul' and len(arg3) > 1):
+        print("Interdit")
+    else:
+        obj3 = methodcaller(arg2,obj2)(obj1)
+        if(type(obj3) == int or type(obj3) == float):
+            print(obj3)
+        elif(obj3 == None):
+            pass
+        else:
+            obj3.show()
