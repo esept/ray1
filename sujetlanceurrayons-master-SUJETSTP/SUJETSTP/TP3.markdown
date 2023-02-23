@@ -215,7 +215,7 @@ sphere 1 0 0 1
 ```
 
 ![tp32](tp32.png)
-
+![]
 ### Deux sphères l'une derrière l'autre
 
 ```
@@ -243,6 +243,7 @@ sphere -1 0 -1 1
 ```
 
 ![tp34](tp34.png)
+
 
 ### Les oreilles de Mickey
 
