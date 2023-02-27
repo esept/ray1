@@ -1,4 +1,5 @@
-from Triplet import Triplet
+# from Triplet import Triplet
+from math_lib.Triplet import Triplet
 
 class Couleur(Triplet):
 

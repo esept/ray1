@@ -1,5 +1,6 @@
 import sys
-from Vecteur import *
+# from Vecteur import *
+from math_lib.Vecteur import *
 
 def build_object(s):
     data = s.split(" ")

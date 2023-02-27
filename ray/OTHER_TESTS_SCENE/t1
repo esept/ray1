@@ -1,0 +1,13 @@
+size 640 480
+output exemple2.png
+camera 0 0 4 0 0 0 0 1 0 45
+
+ambient 0 0 1
+
+maxverts 3
+
+vertex +1 +1 0
+vertex +1 -1 0
+vertex -1 -1 0
+
+tri 0 1 2

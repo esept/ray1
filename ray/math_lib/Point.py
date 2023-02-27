@@ -1,4 +1,5 @@
-from Couleur import *
+# from Couleur import * # ./tests.sh works in this way 
+from math_lib.Couleur import * # with this, have to test to know
 
 class Point(Couleur):
 

@@ -1,4 +1,5 @@
-from Point import *
+# from Point import * 
+from math_lib.Point import *
 
 class Vecteur(Point):
 

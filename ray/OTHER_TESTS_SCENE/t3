@@ -1,0 +1,8 @@
+size 640 480
+output exemple4.png
+camera 0 0 4 0 0 0 0 1 0 45
+
+diffuse 1 0 0
+point -1 1 1 1 1 1
+
+sphere 0 0 0 1
